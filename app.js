@@ -7,6 +7,7 @@ var MongoStore = require('connect-mongo')(session);
 var flash  = require('connect-flash');
 var cookieParser = require('cookie-parser');
 
+const port = process.env.PORT || 3000;
 
 mongoose.connect('mongodb://localhost/meet',(err, db) => {
   if(err){
@@ -59,6 +60,6 @@ app.use(function (err, req, res, next) {
 });
 
 
-app.listen(3000, function () {
-  console.log('Express app listening on port 3000');
+app.listen(port, function () {
+  console.log(`Express app listening on port ${port}`);
 });

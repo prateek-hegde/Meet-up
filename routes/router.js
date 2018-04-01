@@ -126,9 +126,27 @@ router.get('/dashboard/:designation', loggedIn, function(req, res, next) {
   var designation = req.params.designation;
 
   if(designation === 'Student'){
-    res.render('dashboard');
+      User.find({
+        designation: 'teacher'
+      }).then((user) =>{
+        res.render('dashboard', {
+        users: user,
+        });
+      }, (err) => {
+      res.status(400).send(err);
+    });
+
   } else if(designation === 'Teacher'){
-    res.render('dashboard');
+      User.find({
+        designation: 'student'
+      }).then((user) =>{
+        console.log(user);
+        res.render('dashboard', {
+        users: user,
+        });
+      }, (err) => {
+      res.status(400).send(err);
+    });
   }
 
 });

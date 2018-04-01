@@ -14,29 +14,129 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript">
+      function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lang: position.coords.longitude
+                    };
+                    console.log(pos);
+                    // document.getElementById("lat").value = pos.lat;
+                    // document.getElementById("lang").value = pos.lang;
+                });
 
+            }
+
+        }
+
+// window.onload = getLocation();
+    </script>
 </head>
 <body>
 <div class="container" style="padding-top: 2%">
 
 welcome  <a href="/logout">logout</a> <br />
 <div id="map" style="width:100%;height:500px;"></div>
-
+<div>
+  <ul>
+    <% users.forEach(function(user){ %>
+      <li>
+        <%= user.name %>
+      </li>
+    <% }) %>
+  </ul>
+</div>
 <script>
-function myMap() {
-   var myCenter = new google.maps.LatLng(13.073183499,77.5052553);
-   var mapCanvas = document.getElementById("map");
-   var mapOptions = {center: myCenter, zoom: 15};
-   var map = new google.maps.Map(mapCanvas, mapOptions);
-   var marker = new google.maps.Marker({position:myCenter});
-   marker.setMap(map);
-   var circle = new google.maps.Circle({
-    map: map,
-    radius: 1000,    // 10 km in metres
-    fillColor: '#AA0000'
-});
-circle.bindTo('center', marker, 'position');
-// var map=new google.maps.Map(document.getElementById("map"),mapOptions);
+function getDistance(pos1, pos2, unit) {
+  var lat1 = pos1.lat; var lon1 = pos1.lang;
+  var lat2 = pos2.lat; var lon2 = pos2.lang;
+  var radlat1 = Math.PI * lat1/180
+  var radlat2 = Math.PI * lat2/180
+  var theta = lon1-lon2
+  var radtheta = Math.PI * theta/180
+  var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+  dist = Math.acos(dist)
+  dist = dist * 180/Math.PI
+  dist = dist * 60 * 1.1515
+  if (unit=="K") { dist = dist * 1.609344 }
+  if (unit=="N") { dist = dist * 0.8684 }
+  return dist
+}
+
+  function myMap() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var pos = {
+          lat: position.coords.latitude,
+          lang: position.coords.longitude
+        };
+        console.log(pos);
+        var myCenter = new google.maps.LatLng(pos.lat,pos.lang);
+        var mapCanvas = document.getElementById("map");
+        var mapOptions = {center: myCenter, zoom: 14.8};
+        var map = new google.maps.Map(mapCanvas, mapOptions);
+        var marker = new google.maps.Marker({position:myCenter});
+
+        var users = <%-JSON.stringify(users);%>
+        var infoWindow = new google.maps.InfoWindow();
+        for (var i = 0; i < users.length; i++) {
+          var data = users[i].location;
+          var x = users[i];
+          var distance = getDistance(data, pos, 'K');
+          if(distance <= 1){
+            var myLatlng = new google.maps.LatLng(data.lat, data.lang);
+          }
+
+          // var icon = 'https://d30y9cdsu7xlg0.cloudfront.net/png/62983-200.png';
+          var markers = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            title: data.name,
+            // icon: icon
+            animation:google.maps.Animation.BOUNCE
+          });
+
+          (function (markers, x) {
+                  google.maps.event.addListener(markers, "click", function (e) {
+                      if(screen.width > 480 && screen.width < 900){
+                        infoWindow.setContent(`<div style = "width:200px;min-height:40px">
+                         ${x.name} <br> <a href="geo:${pos.lat},${pos.lang}/${data.lat},${data.lang}" target="_blank">Take me there</a>
+                         </div>`);
+                      } else {
+                      infoWindow.setContent(`<div style = "width:200px;height:100px">
+                       ${x.name} <br> <a href="https://www.google.com/maps/dir/${pos.lat},${pos.lang}/${data.lat},${data.lang}" target="_blank">Take me there</a>
+                       </div>`);
+                      infoWindow.open(map, markers);
+                    }
+                  });
+              })(markers, x);
+
+      }
+        var myCity = new google.maps.Circle({
+           center: myCenter,
+           radius: 1000,
+           strokeColor: "#0000FF",
+           strokeOpacity: 0.8,
+           strokeWeight: 2,
+           fillColor: "#0000FF",
+           fillOpacity: 0.4
+       });
+       // marker.setMap(map);
+       // myCity.setMap(map);
+      if(typeof google === 'object' && typeof google.maps === 'object'){
+        marker.setMap(map);
+        myCity.setMap(map);
+      } else {
+        document.getElementById('map').innerHTML = 'Loading';
+      }
+
+
+    });
+
+    }
+
 }
 </script>
 
