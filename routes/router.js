@@ -17,11 +17,12 @@ router.post('/register', function(req, res, next){
   var email = req.body.email;
   var password = req.body.password;
   var designation = req.body.designation;
-
+  var phone = '8105440185'
   var userData = {
     name: name,
     email:email,
     password: password,
+    phone: phone,
     designation: designation,
   }
   console.log(userData);
@@ -73,6 +74,28 @@ router.post('/login', function(req, res, next){
                   return res.redirect('/dashboard/Teacher');
                }
        });
+        // try {
+        //   User.findOneAndUpdate(
+        //       {_id : ObjectID(user._id)},
+        //         {$set: locationData},
+        //         function (err, result) {
+        //           if(err){
+        //             console.log(err);
+        //           }
+        //   });
+        // } catch (err) {
+        //   console.log(err);
+        // } finally {
+        //   User.findOneAndUpdate(
+        //       {email : email},
+        //         {$set: locationData},
+        //         function (err, result) {
+        //           if(err){
+        //             console.log(err);
+        //           }
+        //   });
+        // }
+
 
 
       }
@@ -129,6 +152,5 @@ router.get('/dashboard/:designation', loggedIn, function(req, res, next) {
 });
 
 
-});
 
 module.exports = router;
