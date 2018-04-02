@@ -19,6 +19,10 @@ var UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  phone: {
+    type: String,
+    required: true
+  },
   location: {
     lat:{
       type: String,

@@ -73,28 +73,6 @@ router.post('/login', function(req, res, next){
                   return res.redirect('/dashboard/Teacher');
                }
        });
-        // try {
-        //   User.findOneAndUpdate(
-        //       {_id : ObjectID(user._id)},
-        //         {$set: locationData},
-        //         function (err, result) {
-        //           if(err){
-        //             console.log(err);
-        //           }
-        //   });
-        // } catch (err) {
-        //   console.log(err);
-        // } finally {
-        //   User.findOneAndUpdate(
-        //       {email : email},
-        //         {$set: locationData},
-        //         function (err, result) {
-        //           if(err){
-        //             console.log(err);
-        //           }
-        //   });
-        // }
-
 
 
       }
@@ -140,7 +118,6 @@ router.get('/dashboard/:designation', loggedIn, function(req, res, next) {
       User.find({
         designation: 'student'
       }).then((user) =>{
-        console.log(user);
         res.render('dashboard', {
         users: user,
         });
@@ -151,25 +128,6 @@ router.get('/dashboard/:designation', loggedIn, function(req, res, next) {
 
 });
 
-router.post('/postLocation', (req, res) => {
-  var lat = req.body.lat;
-  var lang = req.body.lang;
-
-  var locationData = {
-    location: {
-      lat: lat,
-      lang: lang
-    }
-  }
-
-  User.findOneAndUpdate(
-      {_id :ObjectID(req.session.userId)},
-        {$set: locationData},
-        function (err, result) {
-          if(err){
-            console.log(err);
-          }
-  });
 
 });
 

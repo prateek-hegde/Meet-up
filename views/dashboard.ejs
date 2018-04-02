@@ -14,27 +14,15 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script type="text/javascript">
-      function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    var pos = {
-                        lat: position.coords.latitude,
-                        lang: position.coords.longitude
-                    };
-                    console.log(pos);
-                    // document.getElementById("lat").value = pos.lat;
-                    // document.getElementById("lang").value = pos.lang;
-                });
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-            }
-
-        }
-
-// window.onload = getLocation();
-    </script>
 </head>
 <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">
+        <img src="/images/m.png" width="30" height="30" alt="">
+      </a>
+    </nav>
 <div class="container" style="padding-top: 2%">
 
 welcome  <a href="/logout">logout</a> <br />
@@ -101,12 +89,14 @@ function getDistance(pos1, pos2, unit) {
           (function (markers, x) {
                   google.maps.event.addListener(markers, "click", function (e) {
                       if(screen.width > 480 && screen.width < 900){
-                        infoWindow.setContent(`<div style = "width:200px;min-height:40px">
-                         ${x.name} <br> <a href="geo:${pos.lat},${pos.lang}/${data.lat},${data.lang}" target="_blank">Take me there</a>
+                        infoWindow.setContent(`<div style = "width:200px;height:150px">
+                        ${x.name} <br>
+                         ${x.phone} <br> <a class="btn btn-success btn-sm" href="geo:${pos.lat},${pos.lang}/${data.lat},${data.lang}" target="_blank">Take me there</a>
                          </div>`);
                       } else {
-                      infoWindow.setContent(`<div style = "width:200px;height:100px">
-                       ${x.name} <br> <a href="https://www.google.com/maps/dir/${pos.lat},${pos.lang}/${data.lat},${data.lang}" target="_blank">Take me there</a>
+                      infoWindow.setContent(`<div style = "width:200px;height:150px">
+                      ${x.name} <br>
+                       ${x.phone} <br> <a class="btn btn-success btn-sm" href="https://www.google.com/maps/dir/${pos.lat},${pos.lang}/${data.lat},${data.lang}" target="_blank">Take me there</a>
                        </div>`);
                       infoWindow.open(map, markers);
                     }
@@ -116,7 +106,7 @@ function getDistance(pos1, pos2, unit) {
       }
         var myCity = new google.maps.Circle({
            center: myCenter,
-           radius: 1000,
+           radius: 1000, //meters
            strokeColor: "#0000FF",
            strokeOpacity: 0.8,
            strokeWeight: 2,
