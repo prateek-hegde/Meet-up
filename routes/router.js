@@ -16,22 +16,50 @@ router.post('/register', function(req, res, next){
   var name = req.body.name;
   var email = req.body.email;
   var password = req.body.password;
+  var phone = req.body.phone;
   var designation = req.body.designation;
-  var phone = '8105440185'
+  var lat = req.body.lat2;
+  var lang = req.body.lang2;
+
   var userData = {
     name: name,
     email:email,
     password: password,
     phone: phone,
     designation: designation,
+    location: {
+      lat: lat,
+      lang: lang
+    }
   }
-  console.log(userData);
+
+  if(lat == ""){
+   req.flash('info', 'Unable to fetch  location!');
+   return res.redirect('/');
+   // res.end();
+   next();
+ }
+
+ /*User.find({
+   email: email
+ }, function (err, user){
+   if(user){
+     req.flash('info', 'User is already Registered');
+     return res.redirect('/');
+     // res.end();
+     next();
+   }
+
+ });*/
+
+
   User.create(userData, function (error, user) {
     if (error) {
       return next(error);
     } else {
-      req.flash('info', 'Registered!');
-      res.redirect('/');
+      req.flash('info', 'Registered Successfully!');
+      return res.redirect('/');
+      next();
     }
   });
 
@@ -43,6 +71,12 @@ router.post('/login', function(req, res, next){
   var lat = req.body.lat;
   var lang = req.body.lang;
 
+  if(lat == ""){
+   req.flash('info', 'Unable to fetch location!');
+   return res.redirect('/');
+   next();
+ }
+
   var locationData = {
     location: {
       lat: lat,
@@ -52,9 +86,8 @@ router.post('/login', function(req, res, next){
 
   User.authenticate(email, password, function (error, user) {
       if (error || !user) {
-        var err = new Error(error);
-          err.status = 401;
-          return next(err);
+        req.flash('info', 'User not found!');
+        return res.redirect('/');
       } else {
 
 
@@ -74,28 +107,6 @@ router.post('/login', function(req, res, next){
                   return res.redirect('/dashboard/Teacher');
                }
        });
-        // try {
-        //   User.findOneAndUpdate(
-        //       {_id : ObjectID(user._id)},
-        //         {$set: locationData},
-        //         function (err, result) {
-        //           if(err){
-        //             console.log(err);
-        //           }
-        //   });
-        // } catch (err) {
-        //   console.log(err);
-        // } finally {
-        //   User.findOneAndUpdate(
-        //       {email : email},
-        //         {$set: locationData},
-        //         function (err, result) {
-        //           if(err){
-        //             console.log(err);
-        //           }
-        //   });
-        // }
-
 
 
       }
@@ -141,6 +152,7 @@ router.get('/dashboard/:designation', loggedIn, function(req, res, next) {
       User.find({
         designation: 'student'
       }).then((user) =>{
+        console.log(user);
         res.render('dashboard', {
         users: user,
         });
@@ -151,6 +163,26 @@ router.get('/dashboard/:designation', loggedIn, function(req, res, next) {
 
 });
 
-
+// router.post('/postLocation', (req, res) => {
+//   var lat = req.body.lat;
+//   var lang = req.body.lang;
+//
+//   var locationData = {
+//     location: {
+//       lat: lat,
+//       lang: lang
+//     }
+//   }
+//
+//   User.findOneAndUpdate(
+//       {_id :ObjectID(req.session.userId)},
+//         {$set: locationData},
+//         function (err, result) {
+//           if(err){
+//             console.log(err);
+//           }
+//   });
+//
+// });
 
 module.exports = router;

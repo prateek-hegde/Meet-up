@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Login & Register</title>
+<title>Meet-Up</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -25,6 +25,13 @@
                     console.log(pos);
                     document.getElementById("lat").value = pos.lat;
                     document.getElementById("lang").value = pos.lang;
+                    document.getElementById("lat2").value = pos.lat;
+                    document.getElementById("lang2").value = pos.lang;
+
+                    if(lat == null || lang == null){
+                      alert('Please Enable the location');
+                    }
+
                 });
 
             }
@@ -36,6 +43,9 @@
 </head>
 <body onload="getLocation()">
 <div class="container" style="padding-top: 2%">
+  <center>
+    <h1 style="text-shadow: 4px 4px 2px rgba(232, 152, 138, 1);  ">Meet-Up</h1>
+  </center>
   <% if(msgs){ %>
 				<% msgs.forEach(function(msg){ %>
 					 <center>
@@ -62,21 +72,25 @@
       <h2>Register</h2>
       <form method="post" action="/register">
         <div class="form-group">
-          <input type="text" name="name" class="form-control" placeholder="Enter Full Name" value="Prateek"/>
+          <input type="text" name="name" class="form-control" placeholder="Enter Full Name" required/>
         </div>
           <div class="form-group">
-            <input type="email" name="email" class="form-control" placeholder="Enter Email" value="p@p.com"/>
+            <input type="email" name="email" class="form-control" placeholder="Enter Email" required/>
           </div>
           <div class="form-group">
-            <input type="password" name="password" class="form-control" placeholder="Enter Password" value="1"/>
+            <input type="password" name="password" class="form-control" placeholder="Enter Password" required/>
+          </div>
+          <div class="form-group">
+            <input type="number" name="phone" class="form-control" placeholder="Enter Phone Number" required/>
           </div>
           <div class="form-group">
             <select name="designation" class="form-control" required>
-              <option>Select Designation</option>
               <option value="student">Student</option>
               <option value="teacher">Teacher</option>
             </select>
           </div>
+          <input type="hidden" id="lat2" name="lat2" />
+          <input type="hidden" id="lang2"  name="lang2"/>
           <button type="submit" class="btn btn-primary">Register</button>
       </form>
     </div>
