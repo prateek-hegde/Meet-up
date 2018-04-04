@@ -40,7 +40,7 @@ router.post('/register', function(req, res, next){
    next();
  }
 
- /*User.find({
+ User.find({
    email: email
  }, function (err, user){
    if(user){
@@ -50,7 +50,7 @@ router.post('/register', function(req, res, next){
      next();
    }
 
- });*/
+ });
 
 
   User.create(userData, function (error, user) {
@@ -163,26 +163,6 @@ router.get('/dashboard/:designation', loggedIn, function(req, res, next) {
 
 });
 
-// router.post('/postLocation', (req, res) => {
-//   var lat = req.body.lat;
-//   var lang = req.body.lang;
-//
-//   var locationData = {
-//     location: {
-//       lat: lat,
-//       lang: lang
-//     }
-//   }
-//
-//   User.findOneAndUpdate(
-//       {_id :ObjectID(req.session.userId)},
-//         {$set: locationData},
-//         function (err, result) {
-//           if(err){
-//             console.log(err);
-//           }
-//   });
-//
-// });
+
 
 module.exports = router;
